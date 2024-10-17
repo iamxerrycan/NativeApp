@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "counterapp",
-    "slug": "counterapp",
+    "name": "Minimalist Weather",
+    "slug": "minimalist-weather",
+    "description":"minimalist weather app",
     "version": "1.0.0",
-    "description":"This is a counter app.",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/minimilast.jpg",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
