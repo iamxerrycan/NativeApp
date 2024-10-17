@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextInput,
   StyleSheet,
@@ -44,7 +44,7 @@ export default function Wether() {
     }
   };
   useEffect(() => {
-    fetchWeatherData('Bodh gaya');
+    fetchWeatherData("Bodh gaya");
   }, []);
 
   return (
@@ -68,42 +68,26 @@ export default function Wether() {
 
       {weatherData && (
         <View style={styles.weatherContainer}>
-             <Image
-              source={require("../assets/images/sun.png")} 
-                            style={styles.weatherIcon}
-            />
+          <Image
+            source={require("../assets/images/sun.png")}
+            style={styles.weatherIcon}
+          />
           <Text style={styles.value}>City: {weatherData.name}</Text>
-          <View style={styles.centy}>
-           
-            <Text style={styles.value}>
-              {weatherData?.main?.temp !== undefined
-                ? weatherData.main.temp
-                : 0}
-              °C
-            </Text>
-          </View>
 
-          <Text style={styles.value}> <Image
-              source={require("../assets/images/sun.png")} 
-              style={styles.weatherIcon}
-            />{weatherData.weather[0].description}</Text>
+          <Text style={styles.value}>
+            Temprature: {weatherData.main.temp}
+          </Text>
+          <Text style={styles.value}>
+            Mood: {weatherData.weather[0].description}
+          </Text>
 
-          <Text style={styles.value}> <Image
-              source={require("../assets/images/sun.png")} 
-              style={styles.weatherIcon}
-            />
+          <Text style={styles.value}>
             Humidity: {weatherData.main.humidity}%
           </Text>
-          <Text style={styles.value}> <Image
-              source={require("../assets/images/sun.png")} 
-              style={styles.weatherIcon}
-            />
+          <Text style={styles.value}>
             Wind Speed: {weatherData.wind.speed} m/s
           </Text>
-          <Text style={styles.value}> <Image
-              source={require("../assets/images/sun.png")} 
-              style={styles.weatherIcon}
-            />
+          <Text style={styles.value}>
             Pressure: {weatherData.main.pressure} hPa
           </Text>
         </View>
@@ -120,8 +104,8 @@ const styles = StyleSheet.create({
     width: "auto",
     height: "100%",
     backgroundColor: "white",
-    display:"flex",
-    flexDirection:"column",
+    display: "flex",
+    flexDirection: "column",
   },
   searchContainer: {
     flexDirection: "row",
@@ -129,7 +113,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   searchInput: {
-    flex: 1, 
+    flex: 1,
     height: 40,
     borderColor: "gray",
     borderWidth: 1,
@@ -149,7 +133,7 @@ const styles = StyleSheet.create({
   },
   weatherContainer: {
     marginTop: 100,
-    gap:10,
+    gap: 15,
     padding: 20,
     alignItems: "center",
   },
@@ -172,13 +156,13 @@ const styles = StyleSheet.create({
     display: "flex",
   },
   weatherIcon: {
-    width: 100,
-    backgroundColor:"white" ,
-    height: 100,
+    width: 20,
+    backgroundColor: "white",
+    height: 20,
   },
-  centy: {
-    marginTop: 20,
-    display: "flex",
-    flexDirection: "row", 
-  },
+  // centy: {
+  //   marginTop: 20,
+  //   display: "flex",
+  //   flexDirection: "row",
+  // },
 });

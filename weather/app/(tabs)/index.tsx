@@ -5,7 +5,6 @@ import React from "react";
 export default function HomeScreen() {
   return (
     <View>
-      <Text>Hello</Text>
       <Wether />
     </View>
   );
