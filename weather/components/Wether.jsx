@@ -10,12 +10,20 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export default function Wether() {
   const [searchQuery, setSearchQuery] = useState("");
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // const getTime = Math.floor(new Date().getTime() /1000)
+  // const isDay = getTime >= weatherData.sys.sunrise && currentTime <= weatherData.sys.sunset;
+  // const weatherIcon = isDay
+  // ? require('../assets/images/sun.png')
+  // : require('../assets/images/monn.png');  // Fix typo in 'moon'
+  const weatherIcon = require("../assets/images/monn.png")
 
   const fetchWeatherData = async () => {
     Keyboard.dismiss();
@@ -44,11 +52,12 @@ export default function Wether() {
     }
   };
   useEffect(() => {
-    fetchWeatherData("Bodh gaya");
+    setError(null);
   }, []);
 
   return (
     <View style={styles.container}>
+      <Text style={styles.header}> Minimalist Weather</Text>
       <View style={styles.searchContainer}>
         <TextInput
           placeholder="Enter city name"
@@ -66,31 +75,59 @@ export default function Wether() {
 
       {error && <Text style={styles.errorText}>{error}</Text>}
 
-      {weatherData && (
+      {weatherData ? (
         <View style={styles.weatherContainer}>
-          <Image
-            source={require("../assets/images/sun.png")}
+          <View style={styles.imgtop}><Image
+            source={weatherIcon}
             style={styles.weatherIcon}
-          />
-          <Text style={styles.value}>City: {weatherData.name}</Text>
+          /></View>
+          <View style={styles.containerweather}>
+            <View style={styles.row}>
+              <View style={styles.box}>
+                <Text style={styles.value}>City: {weatherData.name}</Text>
+              </View>
+              <View style={styles.box}>
+                <Text style={styles.value}>
+                  Temperature: {weatherData.main.temp}°C
+                </Text>
+              </View>
+              <View style={styles.box}>
+                <Text style={styles.value}>
+                  Mood: {weatherData.weather[0].description}
+                </Text>
+              </View>
+            </View>
 
-          <Text style={styles.value}>
-            Temprature: {weatherData.main.temp}
-          </Text>
-          <Text style={styles.value}>
-            Mood: {weatherData.weather[0].description}
-          </Text>
-
-          <Text style={styles.value}>
-            Humidity: {weatherData.main.humidity}%
-          </Text>
-          <Text style={styles.value}>
-            Wind Speed: {weatherData.wind.speed} m/s
-          </Text>
-          <Text style={styles.value}>
-            Pressure: {weatherData.main.pressure} hPa
-          </Text>
+            <View style={styles.row}>
+              <View style={styles.box}>
+                <Text style={styles.value}>
+                  Humidity: {weatherData.main.humidity}%
+                </Text>
+              </View>
+              <View style={styles.box}>
+                <Text style={styles.value}>
+                  Wind Speed: {weatherData.wind.speed} m/s
+                </Text>
+              </View>
+              <View style={styles.box}>
+                <Text style={styles.value}>
+                  Pressure: {weatherData.main.pressure} hPa
+                </Text>
+              </View>
+            </View>
+          </View>
         </View>
+      ) : (
+        <Text
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+            marginTop: "80%",
+          }}
+        >
+          Search For Location
+        </Text>
       )}
 
       {loading && <ActivityIndicator size="large" color="#0000ff" />}
@@ -106,6 +143,9 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     display: "flex",
     flexDirection: "column",
+  },
+  containerweather:{
+    marginTop:20,
   },
   searchContainer: {
     flexDirection: "row",
@@ -135,7 +175,9 @@ const styles = StyleSheet.create({
     marginTop: 100,
     gap: 15,
     padding: 20,
-    alignItems: "center",
+    // justifyContent:"center",
+    // alignContent:"center",
+    // alignItems: "center",
   },
 
   tempText: {
@@ -144,8 +186,14 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   value: {
-    fontSize: 25,
+    fontSize: 20,
+    color: "#f5f5f5",
     fontStyle: "italic",
+    fontWeight: "600", 
+    letterSpacing: 0.5,
+    padding:5,
+    fontFamily: "sans-serif",
+    lineHeight: 20,
   },
   errorText: {
     color: "red",
@@ -156,13 +204,41 @@ const styles = StyleSheet.create({
     display: "flex",
   },
   weatherIcon: {
-    width: 20,
+    width: 40,
     backgroundColor: "white",
-    height: 20,
+    height: 40,
   },
   // centy: {
   //   marginTop: 20,
   //   display: "flex",
   //   flexDirection: "row",
   // },
+  header: {
+    justifyContent: "center",
+    verticalAlign: "middle",
+    alignItems: "center",
+    marginBottom: 20,
+    marginLeft: "35%",
+    width: "100%",
+    fontWeight: "bold",
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    // marginBottom: 10,
+    width:"100%"
+  },
+  box: {
+    backgroundColor: "black",
+    // padding: 15,
+    flex: 1,
+    width: 150,
+    height: 100,
+    margin: 3,
+    borderRadius: 10,
+  },
+  imgtop:{
+    justifyContent:"center",
+    alignItems:"center",
+  }
 });
