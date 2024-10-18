@@ -4,26 +4,18 @@ import {
   StyleSheet,
   Image,
   View,
-  Button,
   Text,
   Keyboard,
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export default function Wether() {
   const [searchQuery, setSearchQuery] = useState("");
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  // const getTime = Math.floor(new Date().getTime() /1000)
-  // const isDay = getTime >= weatherData.sys.sunrise && currentTime <= weatherData.sys.sunset;
-  // const weatherIcon = isDay
-  // ? require('../assets/images/sun.png')
-  // : require('../assets/images/monn.png');  // Fix typo in 'moon'
-  const weatherIcon = require("../assets/images/monn.png")
+  const [isDay, setIsday] = useState(false); // Set default to false
 
   const fetchWeatherData = async () => {
     Keyboard.dismiss();
@@ -37,7 +29,11 @@ export default function Wether() {
       const data = await response.json();
 
       if (response.ok) {
+        const currentTime = Math.floor(new Date().getTime() / 1000);
+        const sunrise = data.sys.sunrise;
+        const sunset = data.sys.sunset;
         setWeatherData(data);
+        setIsday(currentTime >= sunrise && currentTime < sunset);
       } else {
         setError(`Location not found: ${data.message}`);
         setTimeout(() => {
@@ -51,13 +47,14 @@ export default function Wether() {
       setSearchQuery("");
     }
   };
+
   useEffect(() => {
     setError(null);
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}> Minimalist Weather</Text>
+      <Text style={styles.header}>Minimalist Weather</Text>
       <View style={styles.searchContainer}>
         <TextInput
           placeholder="Enter city name"
@@ -77,10 +74,12 @@ export default function Wether() {
 
       {weatherData ? (
         <View style={styles.weatherContainer}>
-          <View style={styles.imgtop}><Image
-            source={weatherIcon}
-            style={styles.weatherIcon}
-          /></View>
+          <View style={styles.imgtop}>
+            <Image
+              source={isDay ? require("../assets/images/sun.png") : require("../assets/images/monn.png")}
+              style={styles.weatherIcon}
+            />
+          </View>
           <View style={styles.containerweather}>
             <View style={styles.row}>
               <View style={styles.box}>
@@ -118,19 +117,10 @@ export default function Wether() {
           </View>
         </View>
       ) : (
-        <Text
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            marginTop: "80%",
-          }}
-        >
-          Search For Location
-        </Text>
+        <Text style={styles.noResultsText}>Search For Location</Text>
       )}
 
-      {loading && <ActivityIndicator size="large" color="#0000ff" />}
+      {loading && <ActivityIndicator size="large" color="#000000" style={styles.indi} />}
     </View>
   );
 }
@@ -144,8 +134,8 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
   },
-  containerweather:{
-    marginTop:20,
+  containerweather: {
+    marginTop: 20,
   },
   searchContainer: {
     flexDirection: "row",
@@ -175,23 +165,14 @@ const styles = StyleSheet.create({
     marginTop: 100,
     gap: 15,
     padding: 20,
-    // justifyContent:"center",
-    // alignContent:"center",
-    // alignItems: "center",
-  },
-
-  tempText: {
-    fontSize: 48,
-    fontWeight: "bold",
-    marginVertical: 10,
   },
   value: {
     fontSize: 20,
     color: "#f5f5f5",
     fontStyle: "italic",
-    fontWeight: "600", 
+    fontWeight: "600",
     letterSpacing: 0.5,
-    padding:5,
+    padding: 5,
     fontFamily: "sans-serif",
     lineHeight: 20,
   },
@@ -205,14 +186,8 @@ const styles = StyleSheet.create({
   },
   weatherIcon: {
     width: 40,
-    backgroundColor: "white",
     height: 40,
   },
-  // centy: {
-  //   marginTop: 20,
-  //   display: "flex",
-  //   flexDirection: "row",
-  // },
   header: {
     justifyContent: "center",
     verticalAlign: "middle",
@@ -225,20 +200,27 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    // marginBottom: 10,
-    width:"100%"
+    width: "100%",
   },
   box: {
     backgroundColor: "black",
-    // padding: 15,
     flex: 1,
-    width: 150,
+    width: 200,
     height: 100,
     margin: 3,
     borderRadius: 10,
   },
-  imgtop:{
-    justifyContent:"center",
-    alignItems:"center",
-  }
+  imgtop: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  indi: {
+    marginTop: 20, // Adjust as needed
+  },
+  noResultsText: {
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+    marginTop: "80%",
+  },
 });
